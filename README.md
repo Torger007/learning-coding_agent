@@ -1,30 +1,51 @@
-# Harness Engineering Framework
+# learning-coding_agent
 
-AI-native 工程化框架，支持稳定、自主、可控的 AI 任务执行。
+智能编程学习助手（CodeMentor），面向编程初学者的 AI 桌面应用。
 
-## 核心组件
-
-| 组件 | 描述 | 状态 |
-|------|------|------|
-| **Agent Harness** | AI 运行底座（环境、工具、沙箱）| ✅ 已完成 |
-| **Context Manager** | 结构化项目知识，防止失忆/幻觉 | 🔄 进行中 |
-| **Architectural Constraints** | 自动化规则执行，防止架构腐化 | 🔄 进行中 |
-| **Verification Hooks** | 质量门禁，行动前自我验证 | 🔄 进行中 |
-| **Feedback Loop** | 从错误学习，正向循环 | 🔄 进行中 |
+- **核心交互**: 双栏并行模式（编程通道 + 理解通道）
+- **技术栈**: React + TypeScript + Electron（前端），FastAPI + Python 3.12（后端）
+- **AI 模型**: GPT-4.5 / Kimi K2.5 多模型切换
+- **代码执行**: Docker 沙箱隔离运行
 
 ## 项目结构
 
 ```
 .
-├── .harness/                  # Harness 框架配置（核心）
-│   ├── context/               # Context Manager 配置
-│   ├── constraints/           # Architectural Constraints 配置
-│   ├── verification/          # Verification Hooks 配置
-│   └── feedback/              # Feedback Loop 配置
-├── docs/                      # 项目知识库
+├── AGENTS.md                  # 根入口（符号链接 → .harness/AGENTS.md）
+├── .harness/                  # Harness 规则框架
+│   ├── AGENTS.md              # L1 核心约束（始终加载）
+│   ├── rules/                 # L2 领域规则（按需加载）
+│   │   ├── architecture.md
+│   │   ├── api-design.md
+│   │   ├── database.md
+│   │   ├── security.md
+│   │   └── testing.md
+│   ├── guides/                # L3 指南与示例（手动参考）
+│   │   ├── error-handling.md
+│   │   ├── performance.md
+│   │   └── patterns/
+│   ├── commands/              # Claude Code 斜杠命令定义
+│   │   ├── plan.md
+│   │   ├── review.md
+│   │   └── validate.md
+│   ├── scripts/               # 验证脚本
+│   │   ├── pre-validate
+│   │   ├── validate.py
+│   │   └── lint-deps.py
+│   ├── hooks/                 # Git hooks
+│   ├── context/               # 动态上下文（AI 可写入）
+│   │   ├── memory.yaml
+│   │   └── decisions.md
+│   └── CHANGELOG.md           # 规则变更日志
 ├── src/                       # 源代码
-├── tests/                     # 测试代码
-└── scripts/                   # 工具脚本
+│   ├── main/                  # Electron 主进程
+│   ├── renderer/              # React 渲染进程
+│   └── shared/                # 共享类型/常量
+├── backend/                   # FastAPI 后端
+│   ├── app/
+│   ├── tests/
+│   └── docker/
+└── tests/                     # 端到端测试
 ```
 
 ## 快速开始
@@ -42,23 +63,44 @@ cd learning-coding_agent
 # 使用 conda 虚拟环境 LC
 conda activate LC
 
-# 安装依赖
+# 安装后端依赖
+cd backend
 pip install -r requirements.txt
+
+# 安装前端依赖
+cd ../src/renderer
+npm install
 ```
 
 ### 3. 运行验证
 
 ```bash
-# 运行项目验证
-python .harness/verification/validate.py
+# 运行完整项目验证
+python .harness/scripts/validate.py
+
+# 检查模块依赖方向
+python .harness/scripts/lint-deps.py
 ```
 
 ## 核心文档
 
-- **AI 项目地图**: [.harness/context/AGENTS.md](.harness/context/AGENTS.md) - 阅读此文档了解项目规则和导航
-- **记忆索引**: [.harness/context/memory.yaml](.harness/context/memory.yaml) - 快速查找规则和知识
-- **核心规则**: [.harness/rules/01-core.md](.harness/rules/01-core.md) - AI 行为规则
-- **编码规范**: [.harness/rules/02-coding.md](.harness/rules/02-coding.md) - 代码风格指南
+| 层级 | 文件 | 说明 |
+|------|------|------|
+| L1 | [`.harness/AGENTS.md`](.harness/AGENTS.md) | 核心约束（≤10条），AI 始终加载 |
+| L2 | [`.harness/rules/architecture.md`](.harness/rules/architecture.md) | 技术栈与目录结构 |
+| L2 | [`.harness/rules/api-design.md`](.harness/rules/api-design.md) | REST / WebSocket / 响应格式 |
+| L2 | [`.harness/rules/security.md`](.harness/rules/security.md) | 沙箱参数与安全约束 |
+| 索引 | [`.harness/context/memory.yaml`](.harness/context/memory.yaml) | 规则索引与快捷命令 |
+| ADR | [`.harness/context/decisions.md`](.harness/context/decisions.md) | 架构决策记录 |
+| 变更 | [`.harness/CHANGELOG.md`](.harness/CHANGELOG.md) | 规则框架变更日志 |
+
+## MVP 目标（1周）
+
+| 优先级 | 功能 |
+|--------|------|
+| P0 | 双栏基础 UI、代码选中 Ask 流程、AI 流式响应、多模型切换 |
+| P1 | Python 代码执行（Docker 沙箱）、术语表基础版、对话历史（SQLite） |
+| P2 | 多语言执行、可视化图示（Mermaid）、术语表高级功能 |
 
 ## 贡献指南
 
