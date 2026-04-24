@@ -1,150 +1,128 @@
 # AI 记忆/规则索引
 # 用于快速查找项目规则和知识
 
-version: "1.0"
-last_updated: "2024-01-15"
+version: "2.0"
+last_updated: "2026-04-24"
 
-# 核心规则索引
-rules:
-  core:
-    path: ".harness/rules/01-core.md"
-    description: "AI 核心行为规则，定义任务执行的基本原则"
-    key_points:
-      - "任务超过 30 分钟必须分解"
-      - "修改公共 API 需要确认"
-      - "禁止自主提交到生产分支"
+# L1 核心约束（始终加载）
+l1_core:
+  path: ".harness/AGENTS.md"
+  description: "核心约束，≤10条，所有任务前必读"
+  key_points:
+    - "任务超过 30 分钟必须分解"
+    - "修改公共 API / 引入依赖 / 删 >50 行代码需确认"
+    - "禁止提交 main、执行 rm -rf、访问敏感配置"
+    - "沙箱: 1 CPU / 512MB / 30s 超时 / 无网络"
+    - "API Key 禁止硬编码"
+    - "MVP 1周约束: P0 必须完成，每天可运行"
 
-  coding:
-    path: ".harness/rules/02-coding.md"
-    description: "编码规范，定义代码风格、文档、测试要求"
-    key_points:
-      - "所有函数必须添加类型注解"
-      - "公共 API 必须有文档字符串"
-      - "新代码必须伴随测试"
-
-  decision:
-    path: ".harness/rules/03-decision.md"
-    description: "决策规则，定义 AI 自主决策的边界"
-
-  safety:
-    path: ".harness/rules/04-safety.md"
-    description: "安全约束，定义禁止的操作和安全准则"
-
-# 架构约束索引
-constraints:
+# L2 领域规则（按需加载）
+l2_rules:
   architecture:
-    path: ".harness/constraints/architecture.yaml"
-    description: "架构定义和依赖方向规则"
+    path: ".harness/rules/architecture.md"
+    description: "技术栈、目录结构、模块边界"
 
-  lint_rules:
-    path: ".harness/constraints/lint-rules/"
-    description: "自定义 Lint 规则目录"
+  api_design:
+    path: ".harness/rules/api-design.md"
+    description: "REST 路由命名、WebSocket 规范、版本控制"
 
-# 流程定义索引
-process:
-  task_lifecycle:
-    path: ".harness/process/task-lifecycle.yaml"
-    description: "任务生命周期定义（Analyze → Plan → Execute → Review → Finalize）"
+  database:
+    path: ".harness/rules/database.md"
+    description: "SQLite 存储策略、表结构、迁移规则"
 
+  testing:
+    path: ".harness/rules/testing.md"
+    description: "测试结构、命名、覆盖要求"
+
+  security:
+    path: ".harness/rules/security.md"
+    description: "沙箱参数、敏感信息、禁止事项"
+
+# L3 指南与示例（手动参考）
+l3_guides:
   error_handling:
-    path: ".harness/process/error-handling.yaml"
-    description: "错误处理和恢复流程"
+    path: ".harness/guides/error-handling.md"
+    description: "错误处理优先级与取舍"
 
-  review_process:
-    path: ".harness/process/review-process.yaml"
-    description: "代码审查流程"
+  performance:
+    path: ".harness/guides/performance.md"
+    description: "性能优化指南（正式版前必读）"
 
-# 验证钩子索引
-verification:
+  patterns:
+    path: ".harness/guides/patterns/"
+    description: "代码模式示例（repository.py, service.py, unit-test.py）"
+
+# 命令定义
+commands:
   validate:
-    path: ".harness/verification/validate.py"
-    description: "统一验证管道"
+    path: ".harness/commands/validate.md"
+    description: "/validate — 运行 lint、类型检查、测试"
 
-  hooks:
-    path: ".harness/verification/hooks/"
-    description: "验证钩子脚本目录"
+  plan:
+    path: ".harness/commands/plan.md"
+    description: "/plan — 为复杂任务生成执行计划"
 
-  checks:
-    path: ".harness/verification/checks/"
-    description: "检查规则库目录"
+  review:
+    path: ".harness/commands/review.md"
+    description: "/review — 审查当前变更"
 
-# 反馈闭环索引
-feedback:
-  ci_config:
-    path: ".harness/feedback/ci-config.yaml"
-    description: "CI 质量检查配置"
+# 验证脚本
+scripts:
+  pre_validate:
+    path: ".harness/scripts/pre-validate"
+    description: "提交前快速验证（API Key 检查等）"
 
-  error_patterns:
-    path: ".harness/feedback/error-patterns.yaml"
-    description: "错误模式库"
+  validate:
+    path: ".harness/scripts/validate.py"
+    description: "主验证管道（ruff + mypy + pytest + 安全扫描）"
 
-  auto_fix:
-    path: ".harness/feedback/auto-fix/"
-    description: "自动修复脚本目录"
+  lint_deps:
+    path: ".harness/scripts/lint-deps.py"
+    description: "依赖方向检查（防止循环依赖）"
 
-# 项目知识索引
-knowledge:
-  overview:
-    path: "docs/01-overview/"
-    description: "项目概览文档"
+# Git hooks
+hooks:
+  pre_commit:
+    path: ".harness/hooks/pre-commit"
+    description: "Git pre-commit hook（调用 pre-validate）"
 
-  architecture:
-    path: "docs/02-architecture/"
-    description: "架构文档"
-
-  guides:
-    path: "docs/03-guides/"
-    description: "使用指南"
-
-  api:
-    path: "docs/04-api/"
-    description: "API 文档"
-
+# 动态上下文（AI 可写入）
+context:
   decisions:
-    path: "docs/05-decisions/"
-    description: "决策记录 (ADR)"
-
-  runbooks:
-    path: "docs/06-runbooks/"
-    description: "运维手册"
+    path: ".harness/context/decisions.md"
+    description: "架构决策记录（ADR）"
 
 # 快捷命令参考
-commands:
+quick_commands:
   - name: "验证项目"
-    cmd: "python .harness/verification/validate.py"
-    description: "运行完整的项目验证"
+    cmd: "python .harness/scripts/validate.py"
+    description: "运行完整项目验证"
 
-  - name: "代码检查"
-    cmd: "ruff check ."
-    description: "运行代码风格检查"
+  - name: "检查依赖方向"
+    cmd: "python .harness/scripts/lint-deps.py"
+    description: "检查模块依赖方向"
 
-  - name: "类型检查"
-    cmd: "mypy src/"
-    description: "运行类型检查"
+  - name: "查看核心规则"
+    cmd: "cat .harness/AGENTS.md"
+    description: "查看 L1 核心约束"
 
-  - name: "运行测试"
-    cmd: "pytest"
-    description: "运行所有测试"
-
-  - name: "查看规则"
-    cmd: "cat .harness/context/AGENTS.md"
-    description: "查看 AI 项目地图"
-
-# AI 自检清单（每次任务前阅读）
+# AI 自检清单（每次任务前）
 checklist:
-  - "是否已阅读 AGENTS.md 了解项目规则？"
-  - "是否已查看 memory.yaml 了解可用资源？"
-  - "是否已分解任务（超过 30 分钟的任务）？"
-  - "是否标记了需要人类确认的点？"
-  - "是否运行了验证检查？"
+  - "是否已阅读 AGENTS.md（L1 核心约束）？"
+  - "任务是否超过 30 分钟或涉及 >3 个文件？若是，必须分解"
+  - "是否标记了需要人类确认的点（API 变更、新依赖、删代码）？"
+  - "是否检查了安全约束（无硬编码密钥、沙箱参数）？"
 
 # 版本历史
 changelog:
-  - version: "1.0"
-    date: "2024-01-15"
+  - version: "2.0"
+    date: "2026-04-24"
     changes:
-      - "初始化记忆索引"
-      - "添加核心规则索引"
-      - "添加架构约束索引"
-      - "添加流程定义索引"
-      - "添加项目知识索引"
+      - "重构为三层规则框架（L1/L2/L3）"
+      - "合并旧 5 个规则文件为新的分层结构"
+      - "新增 commands/, scripts/, guides/patterns/"
+
+  - version: "1.0"
+    date: "2026-04-24"
+    changes:
+      - "初始化 Harness 规则框架"

@@ -1,0 +1,5 @@
+#!/bin/bash
+# Git pre-commit hook
+# 安装: cp .harness/hooks/pre-commit .git/hooks/
+
+exec .harness/scripts/pre-validate

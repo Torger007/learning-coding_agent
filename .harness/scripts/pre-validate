@@ -1,0 +1,18 @@
+#!/bin/bash
+# 提交前快速验证脚本
+# 安装: cp .harness/scripts/pre-validate .git/hooks/pre-commit
+
+echo "Running pre-commit validation..."
+
+# 检查硬编码 API Key
+if grep -rE "(sk-[a-zA-Z0-9]{20,}|Bearer [a-zA-Z0-9]{20,})" --include="*.py" --include="*.ts" --include="*.tsx" src/ backend/; then
+    echo "ERROR: Potential hardcoded API key found!"
+    exit 1
+fi
+
+# 检查 .env 是否被忽略
+if ! grep -q "^\.env$" .gitignore 2>/dev/null; then
+    echo "WARNING: .env not in .gitignore"
+fi
+
+echo "Pre-commit validation passed."
