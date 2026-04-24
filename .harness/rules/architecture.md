@@ -12,7 +12,7 @@ version: "2.0"
 |------|------|------|
 | 前端 | React + TypeScript + Electron | UI 与桌面壳 |
 | 后端 | FastAPI + Python 3.12 | REST API + WebSocket |
-| AI 接口 | 多模型适配器 | GPT-4.5 / Kimi K2.5 |
+| AI 接口 | 多模型适配器 | GPT-5.4 / Kimi K2.5 |
 | 沙箱 | Docker | 代码隔离执行 |
 | 数据(MVP) | SQLite | 本地存储 |
 | 数据(正式) | PostgreSQL | 云端数据库 |

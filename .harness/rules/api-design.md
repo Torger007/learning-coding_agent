@@ -33,7 +33,7 @@ version: "2.0"
     "payload": {
       "conversation_id": "uuid",
       "content": "用户问题",
-      "model": "gpt-4.5"
+      "model": "gpt-5.4"
     }
   }
   ```

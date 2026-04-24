@@ -13,7 +13,7 @@ version: "2.0"
 - **产品**: learning-coding-agent — 智能编程学习助手（Electron 桌面应用）
 - **核心交互**: 双栏并行（编程通道 + 理解通道）
 - **技术栈**: React + TypeScript + Electron 前端，FastAPI + Python 3.12 后端
-- **AI 接口**: GPT-4.5 / Kimi K2.5，多模型可切换
+- **AI 接口**: GPT-5.4 / Kimi K2.5，多模型可切换
 - **代码执行**: Docker 沙箱隔离（Python 3.12 优先）
 
 ## 2. 十大不可违反约束

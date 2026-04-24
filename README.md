@@ -4,7 +4,7 @@
 
 - **核心交互**: 双栏并行模式（编程通道 + 理解通道）
 - **技术栈**: React + TypeScript + Electron（前端），FastAPI + Python 3.12（后端）
-- **AI 模型**: GPT-4.5 / Kimi K2.5 多模型切换
+- **AI 模型**: GPT-5.4 / Kimi K2.5 多模型切换
 - **代码执行**: Docker 沙箱隔离运行
 
 ## 项目结构
