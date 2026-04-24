@@ -1,0 +1,150 @@
+# AI 记忆/规则索引
+# 用于快速查找项目规则和知识
+
+version: "1.0"
+last_updated: "2024-01-15"
+
+# 核心规则索引
+rules:
+  core:
+    path: ".harness/rules/01-core.md"
+    description: "AI 核心行为规则，定义任务执行的基本原则"
+    key_points:
+      - "任务超过 30 分钟必须分解"
+      - "修改公共 API 需要确认"
+      - "禁止自主提交到生产分支"
+
+  coding:
+    path: ".harness/rules/02-coding.md"
+    description: "编码规范，定义代码风格、文档、测试要求"
+    key_points:
+      - "所有函数必须添加类型注解"
+      - "公共 API 必须有文档字符串"
+      - "新代码必须伴随测试"
+
+  decision:
+    path: ".harness/rules/03-decision.md"
+    description: "决策规则，定义 AI 自主决策的边界"
+
+  safety:
+    path: ".harness/rules/04-safety.md"
+    description: "安全约束，定义禁止的操作和安全准则"
+
+# 架构约束索引
+constraints:
+  architecture:
+    path: ".harness/constraints/architecture.yaml"
+    description: "架构定义和依赖方向规则"
+
+  lint_rules:
+    path: ".harness/constraints/lint-rules/"
+    description: "自定义 Lint 规则目录"
+
+# 流程定义索引
+process:
+  task_lifecycle:
+    path: ".harness/process/task-lifecycle.yaml"
+    description: "任务生命周期定义（Analyze → Plan → Execute → Review → Finalize）"
+
+  error_handling:
+    path: ".harness/process/error-handling.yaml"
+    description: "错误处理和恢复流程"
+
+  review_process:
+    path: ".harness/process/review-process.yaml"
+    description: "代码审查流程"
+
+# 验证钩子索引
+verification:
+  validate:
+    path: ".harness/verification/validate.py"
+    description: "统一验证管道"
+
+  hooks:
+    path: ".harness/verification/hooks/"
+    description: "验证钩子脚本目录"
+
+  checks:
+    path: ".harness/verification/checks/"
+    description: "检查规则库目录"
+
+# 反馈闭环索引
+feedback:
+  ci_config:
+    path: ".harness/feedback/ci-config.yaml"
+    description: "CI 质量检查配置"
+
+  error_patterns:
+    path: ".harness/feedback/error-patterns.yaml"
+    description: "错误模式库"
+
+  auto_fix:
+    path: ".harness/feedback/auto-fix/"
+    description: "自动修复脚本目录"
+
+# 项目知识索引
+knowledge:
+  overview:
+    path: "docs/01-overview/"
+    description: "项目概览文档"
+
+  architecture:
+    path: "docs/02-architecture/"
+    description: "架构文档"
+
+  guides:
+    path: "docs/03-guides/"
+    description: "使用指南"
+
+  api:
+    path: "docs/04-api/"
+    description: "API 文档"
+
+  decisions:
+    path: "docs/05-decisions/"
+    description: "决策记录 (ADR)"
+
+  runbooks:
+    path: "docs/06-runbooks/"
+    description: "运维手册"
+
+# 快捷命令参考
+commands:
+  - name: "验证项目"
+    cmd: "python .harness/verification/validate.py"
+    description: "运行完整的项目验证"
+
+  - name: "代码检查"
+    cmd: "ruff check ."
+    description: "运行代码风格检查"
+
+  - name: "类型检查"
+    cmd: "mypy src/"
+    description: "运行类型检查"
+
+  - name: "运行测试"
+    cmd: "pytest"
+    description: "运行所有测试"
+
+  - name: "查看规则"
+    cmd: "cat .harness/context/AGENTS.md"
+    description: "查看 AI 项目地图"
+
+# AI 自检清单（每次任务前阅读）
+checklist:
+  - "是否已阅读 AGENTS.md 了解项目规则？"
+  - "是否已查看 memory.yaml 了解可用资源？"
+  - "是否已分解任务（超过 30 分钟的任务）？"
+  - "是否标记了需要人类确认的点？"
+  - "是否运行了验证检查？"
+
+# 版本历史
+changelog:
+  - version: "1.0"
+    date: "2024-01-15"
+    changes:
+      - "初始化记忆索引"
+      - "添加核心规则索引"
+      - "添加架构约束索引"
+      - "添加流程定义索引"
+      - "添加项目知识索引"
