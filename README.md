@@ -1,120 +1,105 @@
 # learning-coding_agent
 
-智能编程学习助手（CodeMentor），面向编程初学者的 AI 桌面应用。
+面向编程初学者的智能编程学习助手 MVP。当前版本以 Web 形态交付，核心交互是双栏并行：左侧「编程助手」用于多轮生成代码，右侧「理解助手」用于解释选中的代码片段或回答全局问题。
 
-- **核心交互**: 双栏并行模式（编程通道 + 理解通道）
-- **技术栈**: React + TypeScript + Electron（前端），FastAPI + Python 3.12（后端）
-- **AI 模型**: GPT-5.4 / Kimi K2.5 多模型切换
-- **代码执行**: Docker 沙箱隔离运行
+## 功能
+
+- 双栏学习界面：编程通道 + 理解通道
+- Monaco Editor 展示 AI 生成代码，支持选中代码后点击 Ask
+- WebSocket 流式响应，提供接近打字机的反馈体验
+- Kimi K2.5 适配器，支持前端输入 API Key 或后端环境变量
+- Python 代码执行接口，使用 Docker 沙箱隔离
+- 后端单元测试覆盖 AI 适配器和沙箱危险代码检测
+
+## 技术栈
+
+- 前端：React + TypeScript + Vite + Tailwind CSS + shadcn 风格组件 + Zustand
+- 后端：FastAPI + Python 3.12 + httpx + WebSocket
+- 沙箱：Docker `python:3.12-slim`
+- 部署建议：前端 Vercel，后端 Render Docker Web Service
 
 ## 项目结构
 
-```
+```text
 .
-├── AGENTS.md                  # 根入口（符号链接 → .harness/AGENTS.md）
-├── .harness/                  # Harness 规则框架
-│   ├── AGENTS.md              # L1 核心约束（始终加载）
-│   ├── rules/                 # L2 领域规则（按需加载）
-│   │   ├── architecture.md
-│   │   ├── api-design.md
-│   │   ├── database.md
-│   │   ├── security.md
-│   │   └── testing.md
-│   ├── guides/                # L3 指南与示例（手动参考）
-│   │   ├── error-handling.md
-│   │   ├── performance.md
-│   │   └── patterns/
-│   ├── commands/              # Claude Code 斜杠命令定义
-│   │   ├── plan.md
-│   │   ├── review.md
-│   │   └── validate.md
-│   ├── scripts/               # 验证脚本
-│   │   ├── pre-validate
-│   │   ├── validate.py
-│   │   └── lint-deps.py
-│   ├── hooks/                 # Git hooks
-│   ├── context/               # 动态上下文（AI 可写入）
-│   │   ├── memory.yaml
-│   │   └── decisions.md
-│   └── CHANGELOG.md           # 规则变更日志
-├── src/                       # 源代码
-│   ├── main/                  # Electron 主进程
-│   ├── renderer/              # React 渲染进程
-│   └── shared/                # 共享类型/常量
-├── backend/                   # FastAPI 后端
+├── .harness/                 # 项目规则、架构约束、验证脚本
+├── backend/                  # FastAPI 后端
 │   ├── app/
 │   ├── tests/
-│   └── docker/
-└── tests/                     # 端到端测试
+│   ├── Dockerfile
+│   └── render.yaml
+├── docs/
+│   ├── api-key-guide.md
+│   ├── mvp-plan.md
+│   └── mvp-summary.md
+└── frontend/                 # React + Vite 前端
+    ├── src/
+    └── package.json
 ```
 
 ## 快速开始
 
-### 1. 克隆仓库
+### 后端
 
 ```bash
-git clone https://github.com/Torger007/learning-coding_agent.git
-cd learning-coding_agent
-```
-
-### 2. 配置环境
-
-```bash
-# 使用 conda 虚拟环境 LC
-conda activate LC
-
-# 安装后端依赖
 cd backend
 pip install -r requirements.txt
-
-# 安装前端依赖
-cd ../src/renderer
-npm install
+uvicorn app.main:app --reload
 ```
 
-### 3. 运行验证
+后端默认运行在 `http://localhost:8000`，健康检查为：
+
+- `GET /api/v1/health`
+- `GET /health`
+
+如果希望后端统一托管 API Key，可设置环境变量：
 
 ```bash
-# 运行完整项目验证
-python .harness/scripts/validate.py
-
-# 检查模块依赖方向
-python .harness/scripts/lint-deps.py
+KIMI_API_KEY=sk-xxxx
 ```
 
-## 核心文档
+也可以不设置该环境变量，直接在前端设置弹窗中输入 Kimi API Key。
 
-| 层级 | 文件 | 说明 |
+### 前端
+
+```bash
+cd frontend
+npm install
+npm run dev
+```
+
+前端默认运行在 `http://localhost:5173`。如需连接远端后端，可配置：
+
+```bash
+VITE_API_BASE_URL=https://your-api.example.com
+VITE_WS_BASE_URL=wss://your-api.example.com
+```
+
+## 测试与构建
+
+```bash
+cd backend
+pytest tests/unit
+```
+
+```bash
+cd frontend
+npm run build
+```
+
+## API
+
+| 方法 | 路径 | 用途 |
 |------|------|------|
-| L1 | [`.harness/AGENTS.md`](.harness/AGENTS.md) | 核心约束（≤10条），AI 始终加载 |
-| L2 | [`.harness/rules/architecture.md`](.harness/rules/architecture.md) | 技术栈与目录结构 |
-| L2 | [`.harness/rules/api-design.md`](.harness/rules/api-design.md) | REST / WebSocket / 响应格式 |
-| L2 | [`.harness/rules/security.md`](.harness/rules/security.md) | 沙箱参数与安全约束 |
-| 索引 | [`.harness/context/memory.yaml`](.harness/context/memory.yaml) | 规则索引与快捷命令 |
-| ADR | [`.harness/context/decisions.md`](.harness/context/decisions.md) | 架构决策记录 |
-| 变更 | [`.harness/CHANGELOG.md`](.harness/CHANGELOG.md) | 规则框架变更日志 |
+| GET | `/api/v1/health` | 健康检查 |
+| POST | `/api/v1/chat/code` | 编程通道代码生成 |
+| POST | `/api/v1/chat/explain` | 理解通道代码解释/问答 |
+| POST | `/api/v1/code/execute` | Docker 沙箱执行 Python 代码 |
+| WS | `/api/v1/ws/chat` | 流式聊天 |
 
-## MVP 目标（1周）
+## 文档
 
-| 优先级 | 功能 |
-|--------|------|
-| P0 | 双栏基础 UI、代码选中 Ask 流程、AI 流式响应、多模型切换 |
-| P1 | Python 代码执行（Docker 沙箱）、术语表基础版、对话历史（SQLite） |
-| P2 | 多语言执行、可视化图示（Mermaid）、术语表高级功能 |
-
-## 贡献指南
-
-1. Fork 仓库
-2. 创建功能分支 (`git checkout -b feature/amazing-feature`)
-3. 提交更改 (`git commit -m 'Add amazing feature'`)
-4. 推送到分支 (`git push origin feature/amazing-feature`)
-5. 创建 Pull Request
-
-## 许可证
-
-[MIT](LICENSE)
-
-## 联系方式
-
-- 项目链接: https://github.com/Torger007/learning-coding_agent
-- 问题反馈: https://github.com/Torger007/learning-coding_agent/issues
+- [MVP 规划](docs/mvp-plan.md)
+- [Kimi API Key 获取指南](docs/api-key-guide.md)
+- [MVP 总结](docs/mvp-summary.md)
+- [核心规则](.harness/AGENTS.md)
