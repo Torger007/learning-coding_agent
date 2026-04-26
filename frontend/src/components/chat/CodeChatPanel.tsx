@@ -75,10 +75,6 @@ export default function CodeChatPanel() {
 
   const handleSend = useCallback(() => {
     if (!input.trim() || isCodeLoading) return
-    if (!apiKey) {
-      useUIStore.getState().setShowApiKeyDialog(true)
-      return
-    }
 
     const sessionId = codeSessionId ?? crypto.randomUUID()
     if (!codeSessionId) {
@@ -96,7 +92,7 @@ export default function CodeChatPanel() {
         content: input.trim(),
         mode: "code",
         session_id: sessionId,
-        api_key: apiKey,
+        ...(apiKey ? { api_key: apiKey } : {}),
       },
     })
 

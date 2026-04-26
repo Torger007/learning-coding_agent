@@ -11,7 +11,7 @@ learning-coding_agent 已完成 MVP P0 主流程：
 - 用户选中代码后显示 Ask 浮层，并把片段带入理解通道。
 - 理解通道支持围绕选中代码片段继续提问。
 - FastAPI 后端提供 REST API、WebSocket 和健康检查。
-- Kimi K2.5 适配器支持普通响应与流式响应。
+- OpenAI-compatible AI 适配器支持普通响应与流式响应。
 - API Key 支持前端内存输入，也支持后端环境变量兜底。
 - Python 代码执行使用 Docker 沙箱，并在执行前做危险代码静态扫描。
 - AI 适配器和沙箱检测已有单元测试。
@@ -27,7 +27,7 @@ learning-coding_agent 已完成 MVP P0 主流程：
 | 理解通道代码问答 | 已完成 |
 | REST API | 已完成 |
 | WebSocket 流式响应 | 已完成 |
-| Kimi K2.5 适配器 | 已完成 |
+| AI 适配器 | 已完成 |
 | API Key 设置 | 已完成 |
 | Docker 沙箱执行 | 已完成 |
 | 核心单元测试 | 已完成 |
@@ -61,7 +61,7 @@ npm run build
 手动主流程：
 
 1. 打开前端页面。
-2. 点击右上角「设置 API Key」并填入 Kimi API Key。
+2. 点击右上角「设置 API Key」并填入 AI API Key。
 3. 在编程通道输入「写一个冒泡排序」。
 4. 等待 AI 返回代码块。
 5. 在代码块中选中一段代码并点击 Ask。

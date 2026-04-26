@@ -31,7 +31,7 @@ export default function ApiKeySettings({ open, onOpenChange }: ApiKeySettingsPro
       <DialogHeader>
         <DialogTitle>设置 API Key</DialogTitle>
         <DialogDescription>
-          请输入你的 Kimi API Key 以使用 AI 功能
+          如果后端已配置 AI_API_KEY，这里可以不填；前端填写的 Key 会优先用于本次会话。
         </DialogDescription>
       </DialogHeader>
 
@@ -83,20 +83,20 @@ export default function ApiKeySettings({ open, onOpenChange }: ApiKeySettingsPro
             <div className="px-4 pb-4 text-sm text-muted-foreground space-y-3">
               <ol className="list-decimal list-inside space-y-2">
                 <li>
-                  访问 Kimi 开放平台：
+                  访问火山方舟控制台：
                   <a
-                    href="https://platform.moonshot.cn"
+                    href="https://console.volcengine.com/ark"
                     target="_blank"
                     rel="noopener noreferrer"
                     className="text-primary underline"
                   >
-                    platform.moonshot.cn
+                    console.volcengine.com/ark
                   </a>
                 </li>
                 <li>注册或登录你的账号</li>
-                <li>进入左侧菜单「API Key 管理」页面</li>
-                <li>点击「创建 API Key」按钮</li>
-                <li>复制生成的 Key（以 sk- 开头），粘贴到上方输入框</li>
+                <li>进入 API Key 或访问密钥管理页面</li>
+                <li>创建并复制 Coding Plan 可用的 API Key</li>
+                <li>粘贴到上方输入框</li>
                 <li>点击「保存」按钮完成设置</li>
               </ol>
               <p className="text-xs text-muted-foreground bg-muted p-2 rounded">

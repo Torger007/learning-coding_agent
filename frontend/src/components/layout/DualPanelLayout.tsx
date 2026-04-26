@@ -24,10 +24,10 @@ export default function DualPanelLayout({ leftPanel, rightPanel }: DualPanelLayo
         </div>
         <div className="flex items-center gap-2">
           {apiKey ? (
-            <span className="text-xs text-muted-foreground">API Key 已设置</span>
+            <span className="text-xs text-muted-foreground">已使用前端 API Key</span>
           ) : (
             <Button size="sm" variant="outline" onClick={() => setShowApiKeyDialog(true)}>
-              设置 API Key
+              设置前端 API Key（可选）
             </Button>
           )}
         </div>

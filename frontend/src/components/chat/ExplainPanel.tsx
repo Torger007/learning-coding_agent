@@ -88,10 +88,6 @@ export default function ExplainPanel() {
 
   const handleSend = useCallback(() => {
     if (!input.trim() || isExplainLoading) return
-    if (!apiKey) {
-      useUIStore.getState().setShowApiKeyDialog(true)
-      return
-    }
 
     const sessionId = explainSessionId ?? crypto.randomUUID()
     if (!explainSessionId) {
@@ -110,7 +106,7 @@ export default function ExplainPanel() {
         mode: "explain",
         session_id: sessionId,
         code_snippet: selectedSnippet?.code,
-        api_key: apiKey,
+        ...(apiKey ? { api_key: apiKey } : {}),
       },
     })
 

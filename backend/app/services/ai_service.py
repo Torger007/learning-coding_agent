@@ -1,4 +1,4 @@
-"""Kimi K2.5 AI service adapter with streaming support."""
+"""OpenAI-compatible AI service adapter with streaming support."""
 
 import uuid
 from collections.abc import AsyncGenerator
@@ -25,13 +25,20 @@ SYSTEM_PROMPT_EXPLAIN = (
 
 
 class AIService:
-    """Adapter for Kimi K2.5 API."""
+    """Adapter for OpenAI-compatible chat completion APIs."""
 
     def __init__(self) -> None:
-        self.api_key = settings.KIMI_API_KEY
-        self.base_url = settings.KIMI_BASE_URL
-        self.model = settings.KIMI_MODEL
+        self.api_key = settings.resolved_ai_api_key
+        self.base_url = settings.resolved_ai_base_url
+        self.model = settings.resolved_ai_model
         self.client = httpx.AsyncClient(timeout=60.0)
+
+    def _chat_completions_url(self) -> str:
+        """Build the chat completions URL from a base URL or full endpoint URL."""
+        base_url = self.base_url.rstrip("/")
+        if base_url.endswith("/chat/completions"):
+            return base_url
+        return f"{base_url}/chat/completions"
 
     async def generate_code(
         self,
@@ -77,10 +84,10 @@ class AIService:
         stream: bool = False,
         api_key: str | None = None,
     ) -> str | AsyncGenerator[str, None]:
-        """Send a chat completion request to Kimi API."""
+        """Send a chat completion request to the configured AI API."""
         resolved_api_key = api_key or self.api_key
         if not resolved_api_key:
-            raise ValidationError("KIMI_API_KEY is not configured")
+            raise ValidationError("AI_API_KEY is not configured")
 
         messages: list[dict] = [{"role": "system", "content": system}]
         if history:
@@ -99,14 +106,17 @@ class AIService:
             "Content-Type": "application/json",
         }
 
-        url = f"{self.base_url}/chat/completions"
+        url = self._chat_completions_url()
 
         if stream:
             return self._stream_response(url, headers, payload)
 
         response = await self.client.post(url, headers=headers, json=payload)
         if response.status_code != 200:
-            raise ExternalServiceError(f"Kimi API error: {response.status_code} {response.text}")
+            raise ExternalServiceError(
+                f"AI API error: {response.status_code} {response.text}. "
+                f"Request URL: {url}; model: {self.model}"
+            )
 
         data = response.json()
         return data["choices"][0]["message"]["content"]
@@ -117,14 +127,15 @@ class AIService:
         headers: dict,
         payload: dict,
     ) -> AsyncGenerator[str, None]:
-        """Stream response chunks from Kimi API."""
+        """Stream response chunks from the configured AI API."""
         async with self.client.stream(
             "POST", url, headers=headers, json=payload
         ) as response:
             if response.status_code != 200:
                 text = await response.aread()
                 raise ExternalServiceError(
-                    f"Kimi API error: {response.status_code} {text.decode()}"
+                    f"AI API error: {response.status_code} {text.decode()}. "
+                    f"Request URL: {url}; model: {payload.get('model')}"
                 )
             async for line in response.aiter_lines():
                 if line.startswith("data: "):

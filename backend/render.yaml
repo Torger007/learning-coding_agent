@@ -4,8 +4,12 @@ services:
     env: docker
     plan: free
     dockerfilePath: ./Dockerfile
-    envVars:
-      - key: KIMI_API_KEY
+envVars:
+      - key: AI_API_KEY
         sync: false
+      - key: AI_BASE_URL
+        value: https://ark.cn-beijing.volces.com/api/coding/v3
+      - key: AI_MODEL
+        value: doubao-seed-code
       - key: CORS_ORIGINS
         value: "*"

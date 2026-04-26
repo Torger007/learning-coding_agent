@@ -7,7 +7,7 @@
 - 双栏学习界面：编程通道 + 理解通道
 - Monaco Editor 展示 AI 生成代码，支持选中代码后点击 Ask
 - WebSocket 流式响应，提供接近打字机的反馈体验
-- Kimi K2.5 适配器，支持前端输入 API Key 或后端环境变量
+- OpenAI-compatible AI 适配器，支持火山 Coding Plan、前端输入 API Key 或后端环境变量
 - Python 代码执行接口，使用 Docker 沙箱隔离
 - 后端单元测试覆盖 AI 适配器和沙箱危险代码检测
 
@@ -55,10 +55,12 @@ uvicorn app.main:app --reload
 如果希望后端统一托管 API Key，可设置环境变量：
 
 ```bash
-KIMI_API_KEY=sk-xxxx
+AI_API_KEY=your-api-key
+AI_BASE_URL=https://ark.cn-beijing.volces.com/api/coding/v3
+AI_MODEL=doubao-seed-code
 ```
 
-也可以不设置该环境变量，直接在前端设置弹窗中输入 Kimi API Key。
+也可以不设置 `AI_API_KEY`，直接在前端设置弹窗中输入 API Key。
 
 ### 前端
 
@@ -100,6 +102,6 @@ npm run build
 ## 文档
 
 - [MVP 规划](docs/mvp-plan.md)
-- [Kimi API Key 获取指南](docs/api-key-guide.md)
+- [AI API Key 配置指南](docs/api-key-guide.md)
 - [MVP 总结](docs/mvp-summary.md)
 - [核心规则](.harness/AGENTS.md)

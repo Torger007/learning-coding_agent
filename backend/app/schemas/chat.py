@@ -8,8 +8,8 @@ class CodeGenerationRequest(BaseModel):
 
     content: str = Field(..., description="User prompt for code generation")
     session_id: str | None = Field(default=None, description="Session ID for multi-turn context")
-    model: str = Field(default="kimi-k2-5", description="AI model to use")
-    api_key: str | None = Field(default=None, description="Optional request-scoped Kimi API key")
+    model: str = Field(default="doubao-seed-code", description="AI model to use")
+    api_key: str | None = Field(default=None, description="Optional request-scoped AI API key")
 
 
 class CodeExplanationRequest(BaseModel):
@@ -18,8 +18,8 @@ class CodeExplanationRequest(BaseModel):
     content: str = Field(..., description="User question or explanation request")
     code_snippet: str | None = Field(default=None, description="Selected code snippet to explain")
     session_id: str | None = Field(default=None, description="Session ID for context")
-    model: str = Field(default="kimi-k2-5", description="AI model to use")
-    api_key: str | None = Field(default=None, description="Optional request-scoped Kimi API key")
+    model: str = Field(default="doubao-seed-code", description="AI model to use")
+    api_key: str | None = Field(default=None, description="Optional request-scoped AI API key")
 
 
 class CodeExecutionRequest(BaseModel):

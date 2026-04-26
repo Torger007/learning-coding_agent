@@ -13,7 +13,7 @@ class TestAIService:
     @pytest.fixture
     def service(self, monkeypatch):
         """Create an AIService with a dummy API key."""
-        monkeypatch.setenv("KIMI_API_KEY", "test-key")
+        monkeypatch.setenv("AI_API_KEY", "test-key")
         svc = AIService()
         svc.api_key = "test-key"
         return svc
@@ -78,3 +78,21 @@ class TestAIService:
 
         assert result == "Code here"
         assert called_with["headers"]["Authorization"] == "Bearer request-key"
+
+    def test_chat_completions_url_accepts_base_url(self, service):
+        """Test chat completions URL is built from a base URL."""
+        service.base_url = "https://ark.cn-beijing.volces.com/api/coding/v3"
+
+        assert (
+            service._chat_completions_url()
+            == "https://ark.cn-beijing.volces.com/api/coding/v3/chat/completions"
+        )
+
+    def test_chat_completions_url_accepts_full_endpoint_url(self, service):
+        """Test chat completions URL is not duplicated when a full endpoint is configured."""
+        service.base_url = "https://ark.cn-beijing.volces.com/api/coding/v3/chat/completions"
+
+        assert (
+            service._chat_completions_url()
+            == "https://ark.cn-beijing.volces.com/api/coding/v3/chat/completions"
+        )
